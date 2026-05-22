@@ -1,0 +1,180 @@
+<div class="product-form">
+  <div class="product-form__header">
+    <a class="product-form__back" routerLink="/products" aria-label="Volver al listado">
+      ← Volver
+    </a>
+    <h1 class="product-form__title">
+      {{ isEditMode() ? 'Editar Producto' : 'Registrar Producto' }}
+    </h1>
+  </div>
+
+  @if (isLoadingProduct()) {
+    <div class="product-form__loading" role="status" aria-live="polite">
+      <p>Cargando producto...</p>
+    </div>
+  } @else {
+    <div class="product-form__card">
+      @if (submitError()) {
+        <div class="product-form__submit-error" role="alert" aria-live="assertive">
+          <span aria-hidden="true">⚠</span>
+          {{ submitError() }}
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <div class="form-grid">
+
+          <!-- ID -->
+          <div class="form-group">
+            <label class="form-group__label" for="field-id">
+              ID <span class="form-group__required" aria-hidden="true">*</span>
+            </label>
+            <input
+              id="field-id"
+              class="form-group__input"
+              [class.form-group__input--error]="isFieldInvalid('id')"
+              formControlName="id"
+              type="text"
+              placeholder="ej. trj-crd"
+              autocomplete="off"
+              [attr.aria-describedby]="isFieldInvalid('id') ? 'id-error' : null"
+            />
+            @if (isPending('id')) {
+              <p class="form-group__hint">Verificando disponibilidad...</p>
+            } @else if (isFieldInvalid('id')) {
+              <p id="id-error" class="form-group__error" role="alert">
+                {{ getFieldError('id') }}
+              </p>
+            }
+          </div>
+
+          <!-- Nombre -->
+          <div class="form-group">
+            <label class="form-group__label" for="field-name">
+              Nombre <span class="form-group__required" aria-hidden="true">*</span>
+            </label>
+            <input
+              id="field-name"
+              class="form-group__input"
+              [class.form-group__input--error]="isFieldInvalid('name')"
+              formControlName="name"
+              type="text"
+              placeholder="Ingrese nombre del producto"
+              [attr.aria-describedby]="isFieldInvalid('name') ? 'name-error' : null"
+            />
+            @if (isFieldInvalid('name')) {
+              <p id="name-error" class="form-group__error" role="alert">
+                {{ getFieldError('name') }}
+              </p>
+            }
+          </div>
+
+          <!-- Descripción - full width -->
+          <div class="form-group form-group--full">
+            <label class="form-group__label" for="field-description">
+              Descripción <span class="form-group__required" aria-hidden="true">*</span>
+            </label>
+            <textarea
+              id="field-description"
+              class="form-group__input form-group__textarea"
+              [class.form-group__input--error]="isFieldInvalid('description')"
+              formControlName="description"
+              placeholder="Ingrese descripción del producto"
+              rows="3"
+              [attr.aria-describedby]="isFieldInvalid('description') ? 'description-error' : null"
+            ></textarea>
+            @if (isFieldInvalid('description')) {
+              <p id="description-error" class="form-group__error" role="alert">
+                {{ getFieldError('description') }}
+              </p>
+            }
+          </div>
+
+          <!-- Logo - full width -->
+          <div class="form-group form-group--full">
+            <label class="form-group__label" for="field-logo">
+              Logo <span class="form-group__required" aria-hidden="true">*</span>
+            </label>
+            <input
+              id="field-logo"
+              class="form-group__input"
+              [class.form-group__input--error]="isFieldInvalid('logo')"
+              formControlName="logo"
+              type="text"
+              placeholder="URL del logo"
+              autocomplete="off"
+              [attr.aria-describedby]="isFieldInvalid('logo') ? 'logo-error' : null"
+            />
+            @if (isFieldInvalid('logo')) {
+              <p id="logo-error" class="form-group__error" role="alert">
+                {{ getFieldError('logo') }}
+              </p>
+            }
+          </div>
+
+          <!-- Fecha Liberación -->
+          <div class="form-group">
+            <label class="form-group__label" for="field-date-release">
+              Fecha de liberación <span class="form-group__required" aria-hidden="true">*</span>
+            </label>
+            <input
+              id="field-date-release"
+              class="form-group__input"
+              [class.form-group__input--error]="isFieldInvalid('dateRelease')"
+              formControlName="dateRelease"
+              type="date"
+              [attr.aria-describedby]="isFieldInvalid('dateRelease') ? 'date-release-error' : null"
+            />
+            @if (isFieldInvalid('dateRelease')) {
+              <p id="date-release-error" class="form-group__error" role="alert">
+                {{ getFieldError('dateRelease') }}
+              </p>
+            }
+          </div>
+
+          <!-- Fecha Revisión - auto-calculada -->
+          <div class="form-group">
+            <label class="form-group__label" for="field-date-revision">
+              Fecha de reestructuración
+            </label>
+            <input
+              id="field-date-revision"
+              class="form-group__input form-group__input--readonly"
+              formControlName="dateRevision"
+              type="date"
+              aria-readonly="true"
+              aria-describedby="date-revision-hint"
+            />
+            <p id="date-revision-hint" class="form-group__hint">
+              Calculada automáticamente (1 año después de la liberación).
+            </p>
+          </div>
+
+        </div>
+
+        <div class="product-form__actions">
+          <button
+            class="btn btn--secondary"
+            type="button"
+            (click)="onReset()"
+            [disabled]="isSubmitting()"
+          >
+            Reiniciar
+          </button>
+          <button
+            class="btn btn--primary"
+            type="submit"
+            [disabled]="form.invalid || isSubmitting()"
+            [attr.aria-busy]="isSubmitting()"
+          >
+            @if (isSubmitting()) {
+              Guardando...
+            } @else {
+              {{ isEditMode() ? 'Actualizar' : 'Guardar' }}
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</div>
