@@ -1,0 +1,9 @@
+<div class="skeleton" role="status" aria-label="Cargando contenido" aria-busy="true">
+  @for (row of rowsArray(); track $index) {
+    <div class="skeleton__row">
+      @for (col of colsArray(); track $index) {
+        <div class="skeleton__cell" [class.skeleton__cell--narrow]="$first || $last"></div>
+      }
+    </div>
+  }
+</div>

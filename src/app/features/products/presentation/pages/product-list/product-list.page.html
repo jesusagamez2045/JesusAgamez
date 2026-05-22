@@ -1,0 +1,42 @@
+<div class="product-list">
+  <div class="product-list__header">
+    <h1 class="product-list__title">Lista de Productos</h1>
+    <button class="btn btn--primary" type="button" (click)="onCreateProduct()">
+      Agregar
+    </button>
+  </div>
+
+  <div class="product-list__card">
+    @if (error()) {
+      <div class="product-list__error" role="alert" aria-live="polite">
+        <span class="product-list__error-icon" aria-hidden="true">⚠</span>
+        <p class="product-list__error-text">{{ error() }}</p>
+      </div>
+    }
+
+    <div class="product-list__toolbar">
+      <app-product-search (search)="onSearch($event)" />
+    </div>
+
+    <app-product-table
+      [products]="products()"
+      [isLoading]="isLoading()"
+      (edit)="onEdit($event)"
+      (delete)="onDelete($event)"
+    />
+
+    <div class="product-list__footer">
+      <p class="product-list__count">{{ totalFiltered() }} Resultados</p>
+      <select
+        class="product-list__page-select"
+        [value]="pageSize()"
+        (change)="onPageSizeChange($event)"
+        aria-label="Registros por página"
+      >
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+    </div>
+  </div>
+</div>

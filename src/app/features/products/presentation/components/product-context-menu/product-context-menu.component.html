@@ -1,0 +1,37 @@
+<div class="context-menu" appClickOutside (clickOutside)="close()">
+  <button
+    class="context-menu__trigger"
+    type="button"
+    (click)="toggle()"
+    [attr.aria-expanded]="isOpen()"
+    aria-haspopup="true"
+    aria-label="Abrir menú de acciones"
+  >
+    <span class="context-menu__icon" aria-hidden="true">⋮</span>
+  </button>
+
+  @if (isOpen()) {
+    <ul class="context-menu__dropdown" role="menu">
+      <li role="none">
+        <button
+          class="context-menu__item"
+          type="button"
+          role="menuitem"
+          (click)="onEdit()"
+        >
+          Editar
+        </button>
+      </li>
+      <li role="none">
+        <button
+          class="context-menu__item context-menu__item--danger"
+          type="button"
+          role="menuitem"
+          (click)="onDelete()"
+        >
+          Eliminar
+        </button>
+      </li>
+    </ul>
+  }
+</div>

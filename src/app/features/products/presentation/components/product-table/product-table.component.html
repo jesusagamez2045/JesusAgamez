@@ -1,0 +1,52 @@
+<div class="product-table">
+  @if (isLoading()) {
+    <app-skeleton [rows]="5" [cols]="6" />
+  } @else if (products().length === 0) {
+    <div class="product-table__empty" role="status">
+      <p class="product-table__empty-text">No hay productos registrados.</p>
+    </div>
+  } @else {
+    <div class="product-table__scroll-wrapper" role="region" aria-label="Tabla de productos" tabindex="0">
+      <table class="product-table__table">
+        <thead class="product-table__head">
+          <tr>
+            <th scope="col" class="product-table__th product-table__th--logo">Logo</th>
+            <th scope="col" class="product-table__th">Nombre del producto</th>
+            <th scope="col" class="product-table__th">Descripción</th>
+            <th scope="col" class="product-table__th">Fecha de liberación</th>
+            <th scope="col" class="product-table__th">Fecha de reestructuración</th>
+            <th scope="col" class="product-table__th product-table__th--actions">
+              <span class="visually-hidden">Acciones</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="product-table__body">
+          @for (product of products(); track product.id) {
+            <tr class="product-table__row">
+              <td class="product-table__td product-table__td--logo">
+                <img
+                  [src]="product.logo"
+                  [alt]="product.name"
+                  class="product-table__logo"
+                  loading="lazy"
+                  width="40"
+                  height="40"
+                />
+              </td>
+              <td class="product-table__td">{{ product.name }}</td>
+              <td class="product-table__td product-table__td--desc">{{ product.description }}</td>
+              <td class="product-table__td">{{ product.dateRelease | date: 'dd/MM/yyyy' }}</td>
+              <td class="product-table__td">{{ product.dateRevision | date: 'dd/MM/yyyy' }}</td>
+              <td class="product-table__td product-table__td--actions">
+                <app-product-context-menu
+                  (edit)="edit.emit(product)"
+                  (delete)="delete.emit(product)"
+                />
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
