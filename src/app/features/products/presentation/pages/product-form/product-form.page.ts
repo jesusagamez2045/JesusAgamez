@@ -40,7 +40,6 @@ export class ProductFormPage implements OnInit {
   private readonly verifyIdUseCase = inject(VerifyProductIdUseCase);
   private readonly destroyRef = inject(DestroyRef);
 
-  // toObservable must be called in injection context (field initializer = constructor phase)
   private readonly products$ = toObservable(this.store.products);
 
   readonly id = input<string>();
@@ -106,7 +105,6 @@ export class ProductFormPage implements OnInit {
       return;
     }
 
-    // Direct navigation: products not yet loaded
     this.isLoadingProduct.set(true);
     this.store.loadProducts();
 
@@ -132,7 +130,6 @@ export class ProductFormPage implements OnInit {
       logo: product.logo,
       dateRelease: product.dateRelease,
     });
-    // Patch disabled control directly
     this.form.get('dateRevision')!.setValue(product.dateRevision, { emitEvent: false });
   }
 
