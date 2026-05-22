@@ -14,6 +14,13 @@
       </div>
     }
 
+    @if (deleteError()) {
+      <div class="product-list__error" role="alert" aria-live="polite">
+        <span class="product-list__error-icon" aria-hidden="true">⚠</span>
+        <p class="product-list__error-text">{{ deleteError() }}</p>
+      </div>
+    }
+
     <div class="product-list__toolbar">
       <app-product-search (search)="onSearch($event)" />
     </div>
@@ -40,3 +47,15 @@
     </div>
   </div>
 </div>
+
+@if (productToDelete()) {
+  <app-modal
+    title="¿Estás seguro?"
+    [message]="buildDeleteMessage(productToDelete()!)"
+    [cancelLabel]="'Cancelar'"
+    [confirmLabel]="isDeleting() ? 'Eliminando...' : 'Eliminar'"
+    [isDangerous]="true"
+    (confirm)="onConfirmDelete()"
+    (cancel)="onCancelDelete()"
+  />
+}

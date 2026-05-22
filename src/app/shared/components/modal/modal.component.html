@@ -1,0 +1,33 @@
+<div class="modal-backdrop" (click)="onBackdropClick()" aria-hidden="true"></div>
+
+<div
+  #dialog
+  class="modal-dialog"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-labelledby]="'modal-title'"
+  (click)="$event.stopPropagation()"
+>
+  <div class="modal-dialog__header">
+    <h2 id="modal-title" class="modal-dialog__title">{{ title() }}</h2>
+  </div>
+
+  <div class="modal-dialog__body">
+    <p class="modal-dialog__message">{{ message() }}</p>
+  </div>
+
+  <div class="modal-dialog__footer">
+    <button class="btn btn--secondary" type="button" (click)="cancel.emit()">
+      {{ cancelLabel() }}
+    </button>
+    <button
+      class="btn"
+      type="button"
+      [class.btn--danger]="isDangerous()"
+      [class.btn--primary]="!isDangerous()"
+      (click)="confirm.emit()"
+    >
+      {{ confirmLabel() }}
+    </button>
+  </div>
+</div>
