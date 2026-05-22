@@ -150,6 +150,56 @@ describe('ProductStore', () => {
     });
   });
 
+  describe('pagination', () => {
+    beforeEach(() => {
+      useCase.execute.mockReturnValue(of(mockProductList(12)));
+      store.loadProducts();
+      store.setPageSize(5);
+    });
+
+    it('should default to page 1', () => {
+      expect(store.currentPage()).toBe(1);
+    });
+
+    it('should compute totalPages correctly', () => {
+      expect(store.totalPages()).toBe(3); // ceil(12/5)
+    });
+
+    it('should paginate products by page', () => {
+      expect(store.paginatedProducts()).toHaveLength(5);
+      store.setCurrentPage(3);
+      expect(store.paginatedProducts()).toHaveLength(2); // last page: 12 - 10 = 2
+    });
+
+    it('should reset to page 1 when searchTerm changes', () => {
+      store.setCurrentPage(2);
+      store.setSearchTerm('algo');
+      expect(store.currentPage()).toBe(1);
+    });
+
+    it('should reset to page 1 when pageSize changes', () => {
+      store.setCurrentPage(2);
+      store.setPageSize(10);
+      expect(store.currentPage()).toBe(1);
+    });
+
+    it('should clamp page to totalPages after removeProduct reduces total', () => {
+      store.setCurrentPage(3);
+      // Remove the 2 products on page 3 so that page no longer exists
+      const lastTwo = store.products().slice(-2).map((p) => p.id);
+      lastTwo.forEach((id) => store.removeProduct(id));
+      expect(store.currentPage()).toBeLessThanOrEqual(store.totalPages());
+    });
+
+    it('setCurrentPage should clamp to valid range', () => {
+      store.setCurrentPage(999);
+      expect(store.currentPage()).toBe(store.totalPages());
+
+      store.setCurrentPage(0);
+      expect(store.currentPage()).toBe(1);
+    });
+  });
+
   describe('mutations', () => {
     it('removeProduct should remove by id', () => {
       useCase.execute.mockReturnValue(of(mockProductList(3)));

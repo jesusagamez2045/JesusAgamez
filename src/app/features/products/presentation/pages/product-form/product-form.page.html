@@ -1,12 +1,7 @@
 <div class="product-form">
-  <div class="product-form__header">
-    <a class="product-form__back" routerLink="/products" aria-label="Volver al listado">
-      ← Volver
-    </a>
-    <h1 class="product-form__title">
-      {{ isEditMode() ? 'Editar Producto' : 'Registrar Producto' }}
-    </h1>
-  </div>
+  <a class="product-form__back" routerLink="/products" aria-label="Volver al listado">
+    ← Volver
+  </a>
 
   @if (isLoadingProduct()) {
     <div class="product-form__loading" role="status" aria-live="polite">
@@ -14,6 +9,11 @@
     </div>
   } @else {
     <div class="product-form__card">
+      <div class="product-form__card-header">
+        <h1 class="product-form__title">Formulario de Registro</h1>
+        <hr class="product-form__divider" />
+      </div>
+
       @if (submitError()) {
         <div class="product-form__submit-error" role="alert" aria-live="assertive">
           <span aria-hidden="true">⚠</span>
@@ -26,9 +26,7 @@
 
           <!-- ID -->
           <div class="form-group">
-            <label class="form-group__label" for="field-id">
-              ID <span class="form-group__required" aria-hidden="true">*</span>
-            </label>
+            <label class="form-group__label" for="field-id">ID</label>
             <input
               id="field-id"
               class="form-group__input"
@@ -50,9 +48,7 @@
 
           <!-- Nombre -->
           <div class="form-group">
-            <label class="form-group__label" for="field-name">
-              Nombre <span class="form-group__required" aria-hidden="true">*</span>
-            </label>
+            <label class="form-group__label" for="field-name">Nombre</label>
             <input
               id="field-name"
               class="form-group__input"
@@ -69,20 +65,18 @@
             }
           </div>
 
-          <!-- Descripción - full width -->
-          <div class="form-group form-group--full">
-            <label class="form-group__label" for="field-description">
-              Descripción <span class="form-group__required" aria-hidden="true">*</span>
-            </label>
-            <textarea
+          <!-- Descripción -->
+          <div class="form-group">
+            <label class="form-group__label" for="field-description">Descripción</label>
+            <input
               id="field-description"
-              class="form-group__input form-group__textarea"
+              class="form-group__input"
               [class.form-group__input--error]="isFieldInvalid('description')"
               formControlName="description"
+              type="text"
               placeholder="Ingrese descripción del producto"
-              rows="3"
               [attr.aria-describedby]="isFieldInvalid('description') ? 'description-error' : null"
-            ></textarea>
+            />
             @if (isFieldInvalid('description')) {
               <p id="description-error" class="form-group__error" role="alert">
                 {{ getFieldError('description') }}
@@ -90,11 +84,9 @@
             }
           </div>
 
-          <!-- Logo - full width -->
-          <div class="form-group form-group--full">
-            <label class="form-group__label" for="field-logo">
-              Logo <span class="form-group__required" aria-hidden="true">*</span>
-            </label>
+          <!-- Logo -->
+          <div class="form-group">
+            <label class="form-group__label" for="field-logo">Logo</label>
             <input
               id="field-logo"
               class="form-group__input"
@@ -114,9 +106,7 @@
 
           <!-- Fecha Liberación -->
           <div class="form-group">
-            <label class="form-group__label" for="field-date-release">
-              Fecha de liberación <span class="form-group__required" aria-hidden="true">*</span>
-            </label>
+            <label class="form-group__label" for="field-date-release">Fecha Liberación</label>
             <input
               id="field-date-release"
               class="form-group__input"
@@ -134,8 +124,8 @@
 
           <!-- Fecha Revisión - auto-calculada -->
           <div class="form-group">
-            <label class="form-group__label" for="field-date-revision">
-              Fecha de reestructuración
+            <label class="form-group__label form-group__label--muted" for="field-date-revision">
+              Fecha Revisión
             </label>
             <input
               id="field-date-revision"
@@ -145,9 +135,6 @@
               aria-readonly="true"
               aria-describedby="date-revision-hint"
             />
-            <p id="date-revision-hint" class="form-group__hint">
-              Calculada automáticamente (1 año después de la liberación).
-            </p>
           </div>
 
         </div>
@@ -168,9 +155,9 @@
             [attr.aria-busy]="isSubmitting()"
           >
             @if (isSubmitting()) {
-              Guardando...
+              Enviando...
             } @else {
-              {{ isEditMode() ? 'Actualizar' : 'Guardar' }}
+              {{ isEditMode() ? 'Actualizar' : 'Enviar' }}
             }
           </button>
         </div>

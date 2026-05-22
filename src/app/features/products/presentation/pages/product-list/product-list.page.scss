@@ -1,27 +1,17 @@
 @use 'styles/mixins' as m;
 
 .product-list {
-  &__header {
-    @include m.flex-between;
-    margin-bottom: var(--spacing-6);
-  }
-
-  &__title {
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-text-primary);
-  }
-
   &__card {
     background-color: var(--color-bg-surface);
     border-radius: var(--radius-lg);
     border: 1px solid var(--color-border);
-    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    overflow: visible;
   }
 
   &__error {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--spacing-2);
     margin: var(--spacing-4);
     padding: var(--spacing-3) var(--spacing-4);
@@ -32,28 +22,33 @@
   }
 
   &__error-icon {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-base);
     flex-shrink: 0;
+    margin-top: 1px;
   }
 
   &__error-text {
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-normal);
   }
 
   &__toolbar {
-    display: flex;
+    @include m.flex-between;
     align-items: center;
-    justify-content: flex-end;
-    padding: var(--spacing-4);
+    padding: var(--spacing-4) var(--spacing-5);
     border-bottom: 1px solid var(--color-border);
+    gap: var(--spacing-3);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
 
   &__footer {
     @include m.flex-between;
-    padding: var(--spacing-3) var(--spacing-4);
+    align-items: center;
+    padding: var(--spacing-3) var(--spacing-5);
     border-top: 1px solid var(--color-border);
     background-color: var(--color-bg-subtle);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   }
 
   &__count {
@@ -63,6 +58,7 @@
   }
 
   &__page-select {
+    appearance: auto;
     padding: var(--spacing-1) var(--spacing-2);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
@@ -70,10 +66,12 @@
     color: var(--color-text-primary);
     background-color: var(--color-bg-surface);
     cursor: pointer;
+    min-width: 60px;
 
     &:focus {
       outline: none;
       border-color: var(--color-border-focus);
+      box-shadow: 0 0 0 2px rgb(26 26 46 / 0.08);
     }
   }
 }

@@ -13,6 +13,7 @@ export class ProductStore {
   readonly error = signal<string | null>(null);
   readonly searchTerm = signal('');
   readonly pageSize = signal(5);
+  readonly currentPage = signal(1);
 
   readonly filteredProducts = computed(() => {
     const term = this.searchTerm().toLowerCase().trim();
@@ -25,11 +26,16 @@ export class ProductStore {
     );
   });
 
-  readonly paginatedProducts = computed(() =>
-    this.filteredProducts().slice(0, this.pageSize()),
+  readonly totalFiltered = computed(() => this.filteredProducts().length);
+
+  readonly totalPages = computed(() =>
+    Math.max(1, Math.ceil(this.totalFiltered() / this.pageSize())),
   );
 
-  readonly totalFiltered = computed(() => this.filteredProducts().length);
+  readonly paginatedProducts = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return this.filteredProducts().slice(start, start + this.pageSize());
+  });
 
   readonly isEmpty = computed(
     () => !this.isLoading() && !this.error() && this.products().length === 0,
@@ -53,6 +59,7 @@ export class ProductStore {
 
   removeProduct(id: string): void {
     this.products.update((list) => list.filter((p) => p.id !== id));
+    this.clampCurrentPage();
   }
 
   addProduct(product: Product): void {
@@ -67,10 +74,23 @@ export class ProductStore {
 
   setSearchTerm(term: string): void {
     this.searchTerm.set(term);
+    this.currentPage.set(1);
   }
 
   setPageSize(size: number): void {
     this.pageSize.set(size);
+    this.currentPage.set(1);
+  }
+
+  setCurrentPage(page: number): void {
+    const clamped = Math.max(1, Math.min(page, this.totalPages()));
+    this.currentPage.set(clamped);
+  }
+
+  private clampCurrentPage(): void {
+    if (this.currentPage() > this.totalPages()) {
+      this.currentPage.set(this.totalPages());
+    }
   }
 
   private resolveErrorMessage(err: unknown): string {

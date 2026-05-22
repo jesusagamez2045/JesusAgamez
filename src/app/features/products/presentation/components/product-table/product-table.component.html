@@ -24,14 +24,17 @@
           @for (product of products(); track product.id) {
             <tr class="product-table__row">
               <td class="product-table__td product-table__td--logo">
-                <img
-                  [src]="product.logo"
-                  [alt]="product.name"
-                  class="product-table__logo"
-                  loading="lazy"
-                  width="40"
-                  height="40"
-                />
+                <div class="product-table__logo-wrapper">
+                  <img
+                    [src]="product.logo"
+                    [alt]="product.name"
+                    class="product-table__logo"
+                    loading="lazy"
+                    width="40"
+                    height="40"
+                    (error)="onImgError($event, product.name)"
+                  />
+                </div>
               </td>
               <td class="product-table__td">{{ product.name }}</td>
               <td class="product-table__td product-table__td--desc">{{ product.description }}</td>

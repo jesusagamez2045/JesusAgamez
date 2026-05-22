@@ -16,9 +16,12 @@ class MockProductStore {
   totalFiltered = jest.fn().mockReturnValue(0);
   pageSize = jest.fn().mockReturnValue(5);
   isEmpty = jest.fn().mockReturnValue(true);
+  currentPage = jest.fn().mockReturnValue(1);
+  totalPages = jest.fn().mockReturnValue(1);
   loadProducts = jest.fn();
   setSearchTerm = jest.fn();
   setPageSize = jest.fn();
+  setCurrentPage = jest.fn();
   removeProduct = jest.fn();
 }
 
@@ -158,6 +161,11 @@ describe('ProductListPage', () => {
 
       expect(component['deleteError']()).toBe('Custom server error');
     });
+  });
+
+  it('should call store.setCurrentPage when onPageChange is called', () => {
+    component.onPageChange(3);
+    expect(store.setCurrentPage).toHaveBeenCalledWith(3);
   });
 
   it('should build a delete message containing the product name', () => {

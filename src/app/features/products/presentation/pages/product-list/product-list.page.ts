@@ -8,10 +8,11 @@ import { DeleteProductUseCase } from '../../../application/use-cases/delete-prod
 import { ProductTableComponent } from '../../components/product-table/product-table.component';
 import { ProductSearchComponent } from '../../components/product-search/product-search.component';
 import { ModalComponent } from '@shared/components/modal/modal.component';
+import { PaginationComponent } from '@shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-product-list-page',
-  imports: [ProductTableComponent, ProductSearchComponent, ModalComponent],
+  imports: [ProductTableComponent, ProductSearchComponent, ModalComponent, PaginationComponent],
   templateUrl: './product-list.page.html',
   styleUrl: './product-list.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +28,8 @@ export class ProductListPage implements OnInit {
   readonly totalFiltered = this.store.totalFiltered;
   readonly pageSize = this.store.pageSize;
   readonly isEmpty = this.store.isEmpty;
+  readonly currentPage = this.store.currentPage;
+  readonly totalPages = this.store.totalPages;
 
   readonly pageSizeOptions = [5, 10, 20] as const;
 
@@ -45,6 +48,10 @@ export class ProductListPage implements OnInit {
   onPageSizeChange(event: Event): void {
     const select = event.target as HTMLSelectElement;
     this.store.setPageSize(Number(select.value));
+  }
+
+  onPageChange(page: number): void {
+    this.store.setCurrentPage(page);
   }
 
   onEdit(product: Product): void {

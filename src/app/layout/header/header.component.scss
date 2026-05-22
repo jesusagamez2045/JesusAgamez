@@ -10,7 +10,7 @@
   box-shadow: var(--shadow-sm);
 
   &__container {
-    @include m.flex-between;
+    @include m.flex-center;
     height: 100%;
     max-width: var(--content-max-width);
     margin: 0 auto;
@@ -21,8 +21,13 @@
     @include m.flex-center;
     gap: var(--spacing-2);
     text-decoration: none;
-    outline-offset: 4px;
     border-radius: var(--radius-sm);
+    padding: var(--spacing-1) var(--spacing-2);
+    transition: opacity var(--transition-fast);
+
+    &:hover {
+      opacity: 0.85;
+    }
 
     &:focus-visible {
       @include m.focus-ring;
@@ -38,6 +43,6 @@
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
   }
 }

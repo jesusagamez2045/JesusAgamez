@@ -1,12 +1,8 @@
 @use 'styles/mixins' as m;
 
 .product-form {
-  &__header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-2);
-    margin-bottom: var(--spacing-6);
-  }
+  max-width: 720px;
+  margin: 0 auto;
 
   &__back {
     display: inline-flex;
@@ -15,8 +11,8 @@
     font-size: var(--font-size-sm);
     color: var(--color-text-secondary);
     text-decoration: none;
+    margin-bottom: var(--spacing-4);
     transition: color var(--transition-fast);
-    width: fit-content;
 
     &:hover {
       color: var(--color-text-primary);
@@ -28,28 +24,37 @@
     }
   }
 
-  &__title {
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-text-primary);
-  }
-
   &__card {
     background-color: var(--color-bg-surface);
     border-radius: var(--radius-lg);
     border: 1px solid var(--color-border);
-    padding: var(--spacing-8);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
 
-    @include m.respond-to('md') {
-      max-width: 800px;
-    }
+  &__card-header {
+    padding: var(--spacing-6) var(--spacing-8) 0;
+  }
+
+  &__title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    text-align: center;
+    margin-bottom: var(--spacing-4);
+  }
+
+  &__divider {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 0 0 var(--spacing-6);
   }
 
   &__submit-error {
     display: flex;
     align-items: center;
     gap: var(--spacing-2);
-    margin-bottom: var(--spacing-6);
+    margin: 0 var(--spacing-8) var(--spacing-4);
     padding: var(--spacing-3) var(--spacing-4);
     background-color: var(--color-error-light);
     border: 1px solid var(--color-error-border);
@@ -66,26 +71,27 @@
   }
 
   &__actions {
-    @include m.flex-between;
+    display: flex;
+    justify-content: center;
     gap: var(--spacing-4);
-    margin-top: var(--spacing-8);
-    padding-top: var(--spacing-6);
+    padding: var(--spacing-6) var(--spacing-8);
     border-top: 1px solid var(--color-border);
+    background-color: var(--color-bg-subtle);
 
     .btn {
-      flex: 1;
-      max-width: 200px;
+      min-width: 140px;
     }
   }
 }
 
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--spacing-5);
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-5) var(--spacing-6);
+  padding: 0 var(--spacing-8) var(--spacing-6);
 
-  @include m.respond-to('md') {
-    grid-template-columns: 1fr 1fr;
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -94,16 +100,14 @@
   flex-direction: column;
   gap: var(--spacing-1);
 
-  &--full {
-    @include m.respond-to('md') {
-      grid-column: 1 / -1;
-    }
-  }
-
   &__label {
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
     color: var(--color-text-primary);
+
+    &--muted {
+      color: var(--color-text-secondary);
+    }
   }
 
   &__required {
@@ -118,8 +122,11 @@
     font-size: var(--font-size-sm);
     color: var(--color-text-primary);
     background-color: var(--color-bg-surface);
-    transition: border-color var(--transition-fast);
+    transition:
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast);
     width: 100%;
+    height: 42px;
 
     &::placeholder {
       color: var(--color-text-muted);
@@ -128,6 +135,7 @@
     &:focus {
       outline: none;
       border-color: var(--color-border-focus);
+      box-shadow: 0 0 0 2px rgb(26 26 46 / 0.08);
     }
 
     &--error {
@@ -135,19 +143,20 @@
 
       &:focus {
         border-color: var(--color-error);
-        box-shadow: 0 0 0 2px var(--color-error-light);
+        box-shadow: 0 0 0 2px rgb(220 38 38 / 0.1);
       }
     }
 
     &--readonly {
       background-color: var(--color-bg-subtle);
       cursor: not-allowed;
-      color: var(--color-text-secondary);
+      color: var(--color-text-muted);
+      border-color: var(--color-border);
     }
 
     &:disabled {
       background-color: var(--color-bg-subtle);
-      color: var(--color-text-secondary);
+      color: var(--color-text-muted);
       cursor: not-allowed;
     }
   }
@@ -155,16 +164,19 @@
   &__textarea {
     resize: vertical;
     min-height: 80px;
+    height: auto;
   }
 
   &__error {
     font-size: var(--font-size-xs);
     color: var(--color-error);
     font-weight: var(--font-weight-medium);
+    margin-top: 2px;
   }
 
   &__hint {
     font-size: var(--font-size-xs);
     color: var(--color-text-muted);
+    margin-top: 2px;
   }
 }

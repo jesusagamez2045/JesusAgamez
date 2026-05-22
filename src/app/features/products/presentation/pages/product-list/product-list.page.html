@@ -1,11 +1,4 @@
 <div class="product-list">
-  <div class="product-list__header">
-    <h1 class="product-list__title">Lista de Productos</h1>
-    <button class="btn btn--primary" type="button" (click)="onCreateProduct()">
-      Agregar
-    </button>
-  </div>
-
   <div class="product-list__card">
     @if (error()) {
       <div class="product-list__error" role="alert" aria-live="polite">
@@ -23,6 +16,9 @@
 
     <div class="product-list__toolbar">
       <app-product-search (search)="onSearch($event)" />
+      <button class="btn btn--primary" type="button" (click)="onCreateProduct()">
+        Agregar
+      </button>
     </div>
 
     <app-product-table
@@ -30,6 +26,12 @@
       [isLoading]="isLoading()"
       (edit)="onEdit($event)"
       (delete)="onDelete($event)"
+    />
+
+    <app-pagination
+      [currentPage]="currentPage()"
+      [totalPages]="totalPages()"
+      (pageChange)="onPageChange($event)"
     />
 
     <div class="product-list__footer">
