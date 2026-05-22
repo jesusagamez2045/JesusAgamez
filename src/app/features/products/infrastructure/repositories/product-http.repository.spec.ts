@@ -83,6 +83,48 @@ describe('ProductHttpRepository', () => {
     });
   });
 
+  describe('create', () => {
+    it('should POST and return mapped product', () => {
+      const product = mockProduct();
+      const dto = mockProductDto();
+      let result = null;
+
+      repository.create(product).subscribe((p) => (result = p));
+
+      const req = httpMock.expectOne(`${TEST_API}/bp/products`);
+      expect(req.request.method).toBe('POST');
+      req.flush({ data: dto });
+
+      expect(result).toEqual(expect.objectContaining({ id: dto.id }));
+    });
+
+    it('should send snake_case body', () => {
+      const product = mockProduct();
+      repository.create(product).subscribe();
+
+      const req = httpMock.expectOne(`${TEST_API}/bp/products`);
+      expect(req.request.body).toHaveProperty('date_release');
+      req.flush({ data: mockProductDto() });
+    });
+  });
+
+  describe('update', () => {
+    it('should PUT and return mapped product', () => {
+      const product = mockProduct();
+      const { id, ...data } = product;
+      const dto = mockProductDto();
+      let result = null;
+
+      repository.update(id, data).subscribe((p) => (result = p));
+
+      const req = httpMock.expectOne(`${TEST_API}/bp/products/${id}`);
+      expect(req.request.method).toBe('PUT');
+      req.flush({ data: dto });
+
+      expect(result).toEqual(expect.objectContaining({ id: dto.id }));
+    });
+  });
+
   describe('delete', () => {
     it('should call DELETE and emit void', () => {
       let completed = false;

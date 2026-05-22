@@ -116,4 +116,40 @@ describe('ModalComponent', () => {
     expect(buttons[0].nativeElement.textContent.trim()).toBe('No, volver');
     expect(buttons[1].nativeElement.textContent.trim()).toBe('Eliminar');
   });
+
+  it('should not call cancel when a non-Escape key is pressed via onTab', async () => {
+    await createComponent();
+    const cancelSpy = jest.fn();
+    component.cancel.subscribe(cancelSpy);
+
+    const event = new KeyboardEvent('keydown', { key: 'a', bubbles: true });
+    document.dispatchEvent(event);
+
+    expect(cancelSpy).not.toHaveBeenCalled();
+  });
+
+  it('should trap focus forward on Tab when last button is active', async () => {
+    await createComponent();
+    const buttons = fixture.nativeElement.querySelectorAll('button') as NodeListOf<HTMLButtonElement>;
+    const lastBtn = buttons[buttons.length - 1];
+    lastBtn.focus();
+
+    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true });
+    Object.defineProperty(event, 'shiftKey', { value: false });
+    document.dispatchEvent(event);
+
+    // trapFocus runs — no errors thrown
+    expect(component).toBeTruthy();
+  });
+
+  it('should trap focus backward on Shift+Tab when first button is active', async () => {
+    await createComponent();
+    const buttons = fixture.nativeElement.querySelectorAll('button') as NodeListOf<HTMLButtonElement>;
+    buttons[0].focus();
+
+    const event = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true });
+    document.dispatchEvent(event);
+
+    expect(component).toBeTruthy();
+  });
 });

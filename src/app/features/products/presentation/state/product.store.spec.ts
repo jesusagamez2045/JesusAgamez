@@ -67,6 +67,32 @@ describe('ProductStore', () => {
 
       expect(store.error()).toContain('servidor');
     });
+
+    it('should use error.message from body when present', () => {
+      const httpError = new HttpErrorResponse({ status: 400, error: { message: 'Custom msg' } });
+      useCase.execute.mockReturnValue(throwError(() => httpError));
+
+      store.loadProducts();
+
+      expect(store.error()).toBe('Custom msg');
+    });
+
+    it('should set server error message when status >= 500 and no body message', () => {
+      const httpError = new HttpErrorResponse({ status: 503, statusText: 'Service Unavailable' });
+      useCase.execute.mockReturnValue(throwError(() => httpError));
+
+      store.loadProducts();
+
+      expect(store.error()).toContain('servidor');
+    });
+
+    it('should set generic error for non-HTTP errors', () => {
+      useCase.execute.mockReturnValue(throwError(() => new Error('unknown')));
+
+      store.loadProducts();
+
+      expect(store.error()).toContain('inesperado');
+    });
   });
 
   describe('filteredProducts (computed)', () => {
@@ -103,6 +129,24 @@ describe('ProductStore', () => {
       store.setPageSize(5);
 
       expect(store.paginatedProducts()).toHaveLength(5);
+    });
+  });
+
+  describe('isEmpty (computed)', () => {
+    it('should be true when not loading, no error, and products empty', () => {
+      expect(store.isEmpty()).toBe(true);
+    });
+
+    it('should be false when products are loaded', () => {
+      useCase.execute.mockReturnValue(of(mockProductList(2)));
+      store.loadProducts();
+      expect(store.isEmpty()).toBe(false);
+    });
+
+    it('should be false when there is an error', () => {
+      useCase.execute.mockReturnValue(throwError(() => new Error('fail')));
+      store.loadProducts();
+      expect(store.isEmpty()).toBe(false);
     });
   });
 
